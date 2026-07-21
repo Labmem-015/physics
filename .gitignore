@@ -1,0 +1,23 @@
+# Ignore everything
+*
+# Add .gitignore to white list
+!.gitignore
+
+# Other .git files
+!.gitattributes
+!.gitmodules
+
+# Files
+!LICENSE
+!README.md
+
+# Folders
+!/src
+!/src/**
+!/docs
+!/docs/**
+
+# VSCode settings
+!/.vscode   
+!/.vscode/settings.json
+
