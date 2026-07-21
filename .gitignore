@@ -10,12 +10,18 @@
 # Files
 !LICENSE
 !README.md
+!vcpkg-configuration.json
+!vcpkg.json
+!CMakeLists.txt
+!CMakePresets.json
 
 # Folders
 !/src
 !/src/**
 !/docs
 !/docs/**
+!/.cmake
+!/.cmake/**
 
 # VSCode settings
 !/.vscode   
