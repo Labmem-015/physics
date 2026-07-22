@@ -29,3 +29,11 @@ target_link_libraries(app raylib) # glfw)
 if(EXISTS "${PROJECT_SOURCE_DIR}/snippets/")
     add_subdirectory(snippets)
 endif()
+
+if(EXISTS ${PROJECT_BINARY_DIR}/compile_commands.json)
+    message("Copying ${PROJECT_BINARY_DIR}/compile_commands.json to root directory")
+    file(COPY ${PROJECT_BINARY_DIR}/compile_commands.json DESTINATION ${CMAKE_SOURCE_DIR})
+else()
+    #message(WARNING "File ${PROJECT_BINARY_DIR}/compile_commands.json not found. Maybe this file didn't created yet, so reconfigure CMake project.")
+endif()
+
