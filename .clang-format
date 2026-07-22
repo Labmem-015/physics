@@ -1,0 +1,47 @@
+# Clang-Format 19
+---
+Standard: Latest
+ColumnLimit: 120
+LineEnding: LF
+
+Language: Cpp
+
+IndentWidth: 4
+TabWidth: 4
+
+# Includes
+SortIncludes: CaseInsensitive
+IncludeBlocks: Preserve
+IncludeCategories:
+  # Relative
+  - Regex: '^"'
+    Priority: 0
+
+  # Special
+  - Regex: '^<(benchmark/benchmark|gtest/gtest)\.h>$'
+    Priority: 1
+
+  # C++ Standard Library
+  - Regex: '^<[^\.\/]+>$'
+    Priority: 2
+
+  # C Standard Library (C++ Wrappers)
+  - Regex: "^<c(assert|ctype|errno|fenv|float|inttypes|limits|locale|math|setjmp|signal|stdarg|stddef|stdint|stdio|stdlib|string|time|uchar|wchar|wctype)>$"
+    Priority: 3
+
+  # C POSIX Library (Directories)
+  - Regex: '^<(arpa|net|netinet|sys)/.*\.h>$'
+    Priority: 4
+
+  # C POSIX Library
+  - Regex: '^<(aio|complex|cpio|devctl|dirent|dlfcn|endian|fcntl|fmtmsg|fnmatch|ftw|glob|grp|iconv|langinfo|libgen|libintl|monetary|mqueue|ndbm|netdb|nl_types|poll|pthread|pwd|regex|sched|search|semaphore|spawn|strings|stropts|syslog|tar|termios|trace|ulimit|unistd|utime|utmpx|wordexp)\.h>$'
+    Priority: 5
+
+  # C Standard Library
+  - Regex: '^<(assert|ctype|errno|fenv|float|inttypes|iso646|limits|locale|math|setjmp|signal|stdalign|stdarg|stdatomic|stdbit|stdbool|stdckdint|stddef|stdint|stdio|stdlib|stdmchar|stdnoreturn|string|tgmath|threads|time|uchar|wchar|wctype)\.h>$'
+    Priority: 6
+
+  # Third Party
+  - Regex: '^<.*\..*>$'
+    Priority: 7
+...
