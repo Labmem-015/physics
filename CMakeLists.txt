@@ -12,8 +12,6 @@ endif()
 include(CMakePrintHelpers)
 cmake_print_variables(CMAKE_TOOLCHAIN_FILE)
 
-include(.cmake/export_compile_commands_to_root.cmake)
-
 project(physics DESCRIPTION "Physics emulation using GPU" VERSION 0.1.0 LANGUAGES CXX)
 
 file(GLOB hpp_files CONFIGURE_DEPENDS src/*.hpp)
