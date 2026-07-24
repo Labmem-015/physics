@@ -17,6 +17,10 @@ int main(int, char **) {
 
         DrawText("Hello, World!", 190, 200, 20, LIGHTGRAY);
         EndDrawing();
+        
+        // TODO: Remove those lines after updating to raylib version >6.0
+        PollInputEvents();
+        SwapScreenBuffer();
     }
     CloseWindow();
     return 0;
