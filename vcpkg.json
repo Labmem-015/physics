@@ -1,11 +1,16 @@
 {
   "dependencies": [
-    "raylib"
+    "raylib",
+    "opencl"
   ],
   "overrides": [
     {
       "name": "raylib",
       "version": "6.0"
+    },
+    {
+      "name": "opencl",
+      "version": "2024.10.24"
     }
   ],
   "builtin-baseline": "031f4afe03be385aee354f15be6e6b1fe57497c7"

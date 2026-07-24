@@ -19,6 +19,8 @@
 # Folders
 !/src
 !/src/**
+!/snippets
+!/snippets/**
 !/docs
 !/docs/**
 !/.cmake
