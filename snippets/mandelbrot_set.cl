@@ -1,0 +1,47 @@
+int compute_iters(const float x0, const float y0, int iterations) {
+	int n = 0;
+
+	// Compute Zn+1 = Zn^2 + c
+	// We want to colorize all 'c' that makes this sequence finite. All 'c' that makes |Zn| <= R
+	// We approximate our calculationsm, so we limit them to 'iterations' var.
+	// Then evaluate equation, how many iterations it is the part of Mandelbrot set
+	for (float x = x0, y = y0; (x * x + y * y <= 2 * 2) && n < iterations; ++n) {
+		float xtemp = x * x - y * y + x0;
+		y = 2 * x * y + y0;
+		x = xtemp;
+	}
+	return n;
+}
+
+uint to_color_gray(int total_iters, float max_iters) {
+	float min_iters = max_iters - 50;
+	int pos = 0xff * max(0.f, total_iters - min_iters) / (max_iters - min_iters);
+	return pos | (pos << 8) | (pos << 16) | (0xff < 24); // fill pos in all rgb channels to create a gray gradient (alpha channel is 0xff)
+}
+
+// let vars 'px' and 'py' be points of mandelbrot set in the screen center (coords of the center).
+// let 'mag' be the scale of zooming into fractal.
+// max_iters (drawing accuracy)
+// w, h are the sizes of image
+// __global uint* result - global output buffer
+// result_step - shifting between image lines. 
+//
+// all those params will be set in host code
+
+__kernel void draw_mandelbrot(float px, float py, float mag, float max_iters,
+									int w, int h,
+									__global uint * result, int result_step) {
+	// work item position
+	int ix = get_global_id(0);
+	int iy = get_global_id(1);
+	
+	// Number of work items can be larger than image size due to
+	// multiplicity of work group size. So we work strictly within image sizes
+	if (ix < w && iy < h) {
+		float x = px + mag * (float)(ix - w/2) / w;
+		float y = py + mag * (float)(iy - h/2) / w;
+
+		int total_iters = compute_iters(x, y, (int)max_iters);
+		result[iy * result_step + ix] = to_color_gray(total_iters, max_iters);
+	}
+}
