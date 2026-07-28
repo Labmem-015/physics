@@ -14,7 +14,8 @@
 !vcpkg.json
 !CMakeLists.txt
 !CMakePresets.json
-!.clang-format 
+!.clang-format
+!.clangd
 
 # Folders
 !/src

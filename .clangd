@@ -1,0 +1,16 @@
+---
+CompileFlags:
+  Add: [ -std=c++23, -x, c++ ]
+  CompilationDatabase: ./
+Diagnostics:
+  MissingIncludes: None
+  UnusedIncludes: Strict
+Completion:
+  HeaderInsertion: Never
+---
+If:
+  PathMatch: .*\.cl|[ch]$
+CompileFlags:
+  Add: [ -x, c ]
+  Remove: [ -std=c++23 ]
+...
