@@ -9,7 +9,7 @@ Completion:
   HeaderInsertion: Never
 ---
 If:
-  PathMatch: .*\.cl|[ch]$
+  PathMatch: .*\.(cl|h)$
 CompileFlags:
   Add: [ -x, c ]
   Remove: [ -std=c++23 ]
