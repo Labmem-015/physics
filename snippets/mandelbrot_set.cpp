@@ -11,6 +11,7 @@ void invoke_kernel(cl_kernel kernel, cl_command_queue queue, cl_mem buff, cl_uin
 int main(int, char **) {
     static const int res_w = 1200;
     static const int res_h = 640;
+	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(res_w, res_h, "Mandelbrot_set");
 	SetTargetFPS(60);
 
