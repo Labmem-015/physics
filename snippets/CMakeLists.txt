@@ -17,5 +17,5 @@ copy_cl(hello_world.cl)
 # Mandelbrot set
 add_executable(mandelbrot_set mandelbrot_set.cpp)
 target_precompile_headers(mandelbrot_set REUSE_FROM app)
-target_link_libraries(mandelbrot_set OpenCL::OpenCL)
+target_link_libraries(mandelbrot_set OpenCL::OpenCL raylib glfw)
 copy_cl(mandelbrot_set.cl)
