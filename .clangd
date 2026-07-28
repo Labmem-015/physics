@@ -13,4 +13,9 @@ If:
 CompileFlags:
   Add: [ -x, c ]
   Remove: [ -std=c++23 ]
+---
+If:
+  PathMatch: src/main\.hpp
+Diagnostics:
+  UnusedIncludes: None
 ...
