@@ -23,7 +23,7 @@ file(GLOB cpp_files CONFIGURE_DEPENDS src/*.cpp)
 
 add_executable(app ${hpp_files} ${cpp_files})
 target_precompile_headers(app PUBLIC src/main.hpp)
-target_link_libraries(app raylib glfw)
+target_link_libraries(app PRIVATE raylib glfw OpenCL::OpenCL)
 
 if(EXISTS "${PROJECT_SOURCE_DIR}/snippets/")
     add_subdirectory(snippets)

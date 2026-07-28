@@ -10,5 +10,5 @@
 
 #include <raylib.h>
 
-#include <CL/cl.h> // Core OpenCL C header
-#define CL_TARGET_OPENCL_VERSION 300 // Specifies target OpenCL version
+#define CL_HPP_TARGET_OPENCL_VERSION 300 // Specifies target OpenCL version
+#include <CL/opencl.hpp> // Core OpenCL C header
