@@ -16,7 +16,7 @@ int compute_iters(const float x0, const float y0, int iterations) {
 uint to_color_gray(int total_iters, float max_iters) {
 	float min_iters = max_iters - 50;
 	int pos = 0xff * max(0.f, total_iters - min_iters) / (max_iters - min_iters);
-	return pos | (pos << 8) | (pos << 16) | (0xff << 24); // fill pos in all rgb channels to create a gray gradient (alpha channel is 0xff)
+	return 0xff | (pos << 8) | (pos << 16) | (pos << 24); // fill pos in all rgb channels to create a gray gradient (alpha channel is 0xff)
 }
 
 // let vars 'px' and 'py' be points of mandelbrot set in the screen center (coords of the center).

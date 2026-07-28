@@ -1,3 +1,4 @@
+#include "mandelbrot_set_render.hpp"
 
 cl_device_id create_device();
 
@@ -12,6 +13,8 @@ void save_as_ppm(const cl_uint* p, int w, int h);
 int main(int, char **) {
     static const int res_w = 1200;
     static const int res_h = 640;
+	InitWindow(res_w, res_h, "Mandelbrot_set");
+	SetTargetFPS(60);
 
 	auto device = create_device();
 	cl_int err;
@@ -35,7 +38,9 @@ int main(int, char **) {
 	clReleaseContext(context);
 
 	save_as_ppm(pixels.data(), res_w, res_h);
+	render_loop(pixels);
 
+	CloseWindow();
     return 0;
 }
 
