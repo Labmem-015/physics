@@ -8,8 +8,6 @@ int align(int x, int y);
 
 void invoke_kernel(cl_kernel kernel, cl_command_queue queue, cl_mem buff, cl_uint* result, float x, float y, float mag, int w, int h, float iters);
 
-void save_as_ppm(const cl_uint* p, int w, int h);
-
 int main(int, char **) {
     static const int res_w = 1200;
     static const int res_h = 640;
@@ -37,8 +35,7 @@ int main(int, char **) {
 	clReleaseProgram(program);
 	clReleaseContext(context);
 
-	save_as_ppm(pixels.data(), res_w, res_h);
-	render_loop(pixels);
+	render_loop(pixels, res_w, res_h);
 
 	CloseWindow();
     return 0;
@@ -102,14 +99,3 @@ int align(int x, int y) {
 	return (x + y - 1) / y * y;
 }
 
-
-void save_as_ppm(const cl_uint* p, int w, int h) {
-	std::ofstream file("result.ppm", std::ios::binary);
-	file << "P6\n" << w << " " << h << "\n255\n";
-	for (int y = 0; y < h; ++y) {
-		const cl_uint* line = p + w * y;
-		for (int x = 0; x < w; ++x) {
-			file.write((const char*)(line + x), 3);
-		}
-	}
-}

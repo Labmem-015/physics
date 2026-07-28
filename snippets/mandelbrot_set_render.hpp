@@ -1,27 +1,27 @@
 #pragma once
 
-inline Image create_image(std::vector<cl_uint> &pixels, int width, int height) {
-    Image image{
-        .data = pixels.data(),
-        .width = width,
-        .height = height,
-        .mipmaps = 1,
-        .format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,
-    };
-    return image;
-}
-
-inline void render_loop(std::vector<cl_uint> &pixels) {
+inline void render_loop(std::vector<cl_uint> &pixels, int width, int height, float scale = 1.0f) {
     static_assert(sizeof(Color) == sizeof(cl_uint) && "Sizes of Color and cl_uint are not equal!");
 
-    Color color;
-    while (!WindowShouldClose()) {
-        BeginDrawing();
+    Image blank = GenImageColor(width, height, BLANK);
+    Texture2D texture = LoadTextureFromImage(blank);
+    UnloadImage(blank);
 
+    while (!WindowShouldClose()) {
+		UpdateTexture(texture, pixels.data());
+        BeginDrawing();
+        {
+            ClearBackground(BLACK);
+            DrawTexturePro(texture, Rectangle{0, 0, (float)width, (float)height},
+                           Rectangle{0, 0, (float)(width * scale), (float)(height * scale)}, Vector2{0, 0}, 0.f, WHITE);
+            DrawFPS(10, 10);
+        }
         EndDrawing();
 
         // TODO: Remove after fix
         PollInputEvents();
         SwapScreenBuffer();
     }
+
+	UnloadTexture(texture);
 }
