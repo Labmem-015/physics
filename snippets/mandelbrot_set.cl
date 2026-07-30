@@ -3,7 +3,7 @@ int compute_iters(const float x0, const float y0, int iterations) {
 
 	// Compute Zn+1 = Zn^2 + c
 	// We want to colorize all 'c' that makes this sequence finite. All 'c' that makes |Zn| <= R
-	// We approximate our calculationsm, so we limit them to 'iterations' var.
+	// We approximate our calculations, so we limit them to 'iterations' var.
 	// Then evaluate equation, how many iterations it is the part of Mandelbrot set
 	for (float x = x0, y = y0; (x * x + y * y <= 2 * 2) && n < iterations; ++n) {
 		float xtemp = x * x - y * y + x0;
@@ -38,6 +38,7 @@ __kernel void draw_mandelbrot(float px, float py, float mag, float max_iters,
 	// Number of work items can be larger than image size due to
 	// multiplicity of work group size. So we work strictly within image sizes
 	if (ix < w && iy < h) {
+		// Get actual pixel for current work item
 		float x = px + mag * (float)(ix - w/2) / w;
 		float y = py + mag * (float)(iy - h/2) / w;
 
