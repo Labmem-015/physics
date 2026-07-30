@@ -7,6 +7,9 @@
 #include <sstream>
 #include <vector>
 #include <cassert>
+#include <cstdint>
+#include <atomic>
+#include <cmath>
 
 #include <raylib.h>
 

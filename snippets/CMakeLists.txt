@@ -7,6 +7,7 @@ function(copy_cl file)
 	endif()
 endfunction()
 
+include_directories(./)
 
 # Hello World printing
 add_executable(opencl_hello_world opencl_hello_world.cpp)
@@ -15,7 +16,7 @@ target_link_libraries(opencl_hello_world PRIVATE OpenCL::OpenCL)
 copy_cl(hello_world.cl)
 
 # Mandelbrot set
-add_executable(mandelbrot_set mandelbrot_set.cpp)
+add_executable(mandelbrot_set mandelbrot_set.cpp mandelbrot_set_render.cpp)
 target_precompile_headers(mandelbrot_set REUSE_FROM app)
 target_link_libraries(mandelbrot_set PRIVATE OpenCL::OpenCL raylib glfw)
 copy_cl(mandelbrot_set.cl)
