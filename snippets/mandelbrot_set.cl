@@ -1,20 +1,20 @@
-int compute_iters(const float x0, const float y0, int iterations) {
+int compute_iters(const double x0, const double y0, int iterations) {
 	int n = 0;
 
 	// Compute Zn+1 = Zn^2 + c
 	// We want to colorize all 'c' that makes this sequence finite. All 'c' that makes |Zn| <= R
 	// We approximate our calculations, so we limit them to 'iterations' var.
 	// Then evaluate equation, how many iterations it is the part of Mandelbrot set
-	for (float x = x0, y = y0; (x * x + y * y <= 2 * 2) && n < iterations; ++n) {
-		float xtemp = x * x - y * y + x0;
+	for (double x = x0, y = y0; (x * x + y * y <= 2 * 2) && n < iterations; ++n) {
+		double xtemp = x * x - y * y + x0;
 		y = 2 * x * y + y0;
 		x = xtemp;
 	}
 	return n;
 }
 
-uint to_color_gray(int total_iters, float max_iters) {
-	float min_iters = max_iters - 50;
+uint to_color_gray(int total_iters, double max_iters) {
+	double min_iters = max_iters - 50;
 	int pos = 0xff * max(0.f, total_iters - min_iters) / (max_iters - min_iters);
 	return 0xff | (pos << 8) | (pos << 16) | (pos << 24); // fill pos in all rgb channels to create a gray gradient (alpha channel is 0xff)
 }
@@ -28,7 +28,7 @@ uint to_color_gray(int total_iters, float max_iters) {
 //
 // all those params will be set in host code
 
-__kernel void draw_mandelbrot(float px, float py, float mag, float max_iters,
+__kernel void draw_mandelbrot(double px, double py, double mag, double max_iters,
 									int w, int h,
 									__global uint * result, int result_step) {
 	// work item position
@@ -39,8 +39,8 @@ __kernel void draw_mandelbrot(float px, float py, float mag, float max_iters,
 	// multiplicity of work group size. So we work strictly within image sizes
 	if (ix < w && iy < h) {
 		// Get actual pixel for current work item
-		float x = px + mag * (float)(ix - w/2) / w;
-		float y = py + mag * (float)(iy - h/2) / w;
+		double x = px + mag * (double)(ix - w/2) / w;
+		double y = py + mag * (double)(iy - h/2) / w;
 
 		int total_iters = compute_iters(x, y, (int)max_iters);
 		result[iy * result_step + ix] = to_color_gray(total_iters, max_iters);

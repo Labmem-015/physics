@@ -6,8 +6,8 @@ cl_program build_kernel_code(cl_context ctx, cl_device_id dev);
 
 int align(int x, int y);
 
-void invoke_kernel(cl_kernel kernel, cl_command_queue queue, cl_mem buff, cl_uint *result, float x, float y, float mag,
-                   int w, int h, float iters);
+void invoke_kernel(cl_kernel kernel, cl_command_queue queue, cl_mem buff, cl_uint *result, double x, double y, double mag,
+                   int w, int h, double iters);
 
 void gpu_calculus(std::stop_token stop, std::vector<cl_uint> &pixels, int res_w, int res_h);
 
@@ -45,12 +45,12 @@ void gpu_calculus(std::stop_token stop, std::vector<cl_uint> &pixels, int res_w,
     if (err)
         throw;
 
-	float xcenter = 0.f;
-	float ycenter = 0.f;
-	constexpr float center_step = 0.0005;
+	double xcenter = 0.f;
+	double ycenter = 0.f;
+	constexpr double center_step = 0.0005;
 
-	float scale = 1.0f;
-	constexpr float scale_step = 0.01;
+	double scale = 1.0f;
+	constexpr double scale_step = 0.01;
 
     while (!stop.stop_requested()) {
 		if (IsKeyDown(KEY_E)) {
@@ -69,7 +69,7 @@ void gpu_calculus(std::stop_token stop, std::vector<cl_uint> &pixels, int res_w,
 			ycenter -= center_step;
 		}
 
-        invoke_kernel(kernel, command_queue, cl_mem_buff, pixels.data(), xcenter, ycenter, scale, res_w, res_h, 50);
+        invoke_kernel(kernel, command_queue, cl_mem_buff, pixels.data(), xcenter, ycenter, scale, res_w, res_h, 50.0f);
     }
     clReleaseKernel(kernel);
     clReleaseMemObject(cl_mem_buff);
@@ -107,13 +107,13 @@ cl_program build_kernel_code(cl_context ctx, cl_device_id dev) {
     return program;
 }
 
-void invoke_kernel(cl_kernel kernel, cl_command_queue queue, cl_mem buff, cl_uint *result, float x, float y, float mag,
-                   int w, int h, float iters) {
+void invoke_kernel(cl_kernel kernel, cl_command_queue queue, cl_mem buff, cl_uint *result, double x, double y, double mag,
+                   int w, int h, double iters) {
     cl_int err = 0;
-    err |= clSetKernelArg(kernel, 0, sizeof(float), &x);
-    err |= clSetKernelArg(kernel, 1, sizeof(float), &y);
-    err |= clSetKernelArg(kernel, 2, sizeof(float), &mag);
-    err |= clSetKernelArg(kernel, 3, sizeof(float), &iters);
+    err |= clSetKernelArg(kernel, 0, sizeof(double), &x);
+    err |= clSetKernelArg(kernel, 1, sizeof(double), &y);
+    err |= clSetKernelArg(kernel, 2, sizeof(double), &mag);
+    err |= clSetKernelArg(kernel, 3, sizeof(double), &iters);
     err |= clSetKernelArg(kernel, 4, sizeof(cl_int), &w);
     err |= clSetKernelArg(kernel, 5, sizeof(cl_int), &h);
     err |= clSetKernelArg(kernel, 6, sizeof(cl_mem), &buff);
