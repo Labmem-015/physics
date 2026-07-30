@@ -9,7 +9,7 @@ int align(int x, int y);
 void invoke_kernel(cl_kernel kernel, cl_command_queue queue, cl_mem buff, cl_uint *result, float x, float y, float mag,
                    int w, int h, float iters);
 
-void gpu_calculus(std::stop_token stop, std::vector<cl_uint> &pixels, int res_w, int res_h, float scale = 1);
+void gpu_calculus(std::stop_token stop, std::vector<cl_uint> &pixels, int res_w, int res_h);
 
 int main(int, char **) {
     static const int res_w = 1200;
@@ -28,7 +28,7 @@ int main(int, char **) {
     return 0;
 }
 
-void gpu_calculus(std::stop_token stop, std::vector<cl_uint> &pixels, int res_w, int res_h, float scale) {
+void gpu_calculus(std::stop_token stop, std::vector<cl_uint> &pixels, int res_w, int res_h) {
     auto device = create_device();
     cl_int err;
     auto context = clCreateContext(nullptr, 1, &device, nullptr, nullptr, &err);
@@ -45,9 +45,31 @@ void gpu_calculus(std::stop_token stop, std::vector<cl_uint> &pixels, int res_w,
     if (err)
         throw;
 
-    while (!stop.stop_requested()) {
+	float xcenter = 0.f;
+	float ycenter = 0.f;
+	constexpr float center_step = 0.0005;
 
-        invoke_kernel(kernel, command_queue, cl_mem_buff, pixels.data(), -.5f, 0.f, 4.5f, res_w, res_h, 50);
+	float scale = 1.0f;
+	constexpr float scale_step = 0.01;
+
+    while (!stop.stop_requested()) {
+		if (IsKeyDown(KEY_E)) {
+			scale += scale_step;
+		}
+		if (IsKeyDown(KEY_Q)) {
+			scale -= scale_step;
+		}
+		if (IsKeyDown(KEY_D)) {
+			xcenter += center_step;
+		}if (IsKeyDown(KEY_A)) {
+			xcenter -= center_step;
+		}if (IsKeyDown(KEY_W)) {
+			ycenter += center_step;
+		}if (IsKeyDown(KEY_S)) {
+			ycenter -= center_step;
+		}
+
+        invoke_kernel(kernel, command_queue, cl_mem_buff, pixels.data(), xcenter, ycenter, scale, res_w, res_h, 50);
     }
     clReleaseKernel(kernel);
     clReleaseMemObject(cl_mem_buff);
