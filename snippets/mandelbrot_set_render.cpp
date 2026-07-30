@@ -55,3 +55,4 @@ void render_loop(std::vector<cl_uint> &pixels, int width, int height, float scal
 
     UnloadTexture(texture);
 }
+
