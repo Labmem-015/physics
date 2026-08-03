@@ -25,3 +25,8 @@ copy_cl(mandelbrot_set/mandelbrot_set.cl)
 add_executable(check_fp64_support check_fp64_support.cpp)
 target_precompile_headers(check_fp64_support REUSE_FROM app)
 target_link_libraries(check_fp64_support PRIVATE OpenCL::OpenCL raylib glfw)
+
+# Matrix multiplication
+add_executable(matmul matmul/main.cpp)
+target_link_libraries(matmul PRIVATE OpenCL::OpenCL)
+copy_cl(matmul/matmul.cl)
