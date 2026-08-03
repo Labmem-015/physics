@@ -1,4 +1,4 @@
-#include "mandelbrot_set_render.hpp"
+#include "render.hpp"
 
 cl_device_id create_device();
 
