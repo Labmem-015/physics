@@ -19,10 +19,9 @@ int main(int, char **) {
     SetTargetFPS(60);
 
     std::vector<cl_uint> pixels(res_w * res_h);
-    
-	std::jthread gpu_thr{[&](std::stop_token stop) { gpu_calculus(stop, pixels, res_w, res_h);
-        }};
-	render_loop(pixels, res_w, res_h);
+
+    std::jthread gpu_thr{[&](std::stop_token stop) { gpu_calculus(stop, pixels, res_w, res_h); }};
+    render_loop(pixels, res_w, res_h);
 
     CloseWindow();
     return 0;
@@ -45,29 +44,49 @@ void gpu_calculus(std::stop_token stop, std::vector<cl_uint> &pixels, int res_w,
     if (err)
         throw;
 
-	float xcenter = 0.f;
-	float ycenter = 0.f;
-	constexpr float center_step = 0.0005;
+    // Allocate memory for the extension string
+    size_t ext_size;
+    clGetDeviceInfo(device, CL_DEVICE_EXTENSIONS, 0, NULL, &ext_size);
+    char *extensions = (char *)malloc(ext_size);
 
-	float scale = 1.0f;
-	constexpr float scale_step = 0.01;
+    // Fetch the supported extensions
+    clGetDeviceInfo(device, CL_DEVICE_EXTENSIONS, ext_size, extensions, NULL);
+
+    // Check for the double precision string
+    if (strstr(extensions, "cl_khr_fp64") != NULL) {
+        printf("Double precision is supported!\n");
+    } else {
+        printf("Double precision is NOT supported.\n");
+    }
+
+    free(extensions);
+
+    float xcenter = 0.f;
+    float ycenter = 0.f;
+    constexpr float center_step = 0.0005;
+
+    float scale = 1.0f;
+    constexpr float scale_step = 0.01;
 
     while (!stop.stop_requested()) {
-		if (IsKeyDown(KEY_E)) {
-			scale += scale_step;
-		}
-		if (IsKeyDown(KEY_Q)) {
-			scale -= scale_step;
-		}
-		if (IsKeyDown(KEY_D)) {
-			xcenter += center_step;
-		}if (IsKeyDown(KEY_A)) {
-			xcenter -= center_step;
-		}if (IsKeyDown(KEY_W)) {
-			ycenter += center_step;
-		}if (IsKeyDown(KEY_S)) {
-			ycenter -= center_step;
-		}
+        if (IsKeyDown(KEY_E)) {
+            scale += scale_step;
+        }
+        if (IsKeyDown(KEY_Q)) {
+            scale -= scale_step;
+        }
+        if (IsKeyDown(KEY_D)) {
+            xcenter += center_step;
+        }
+        if (IsKeyDown(KEY_A)) {
+            xcenter -= center_step;
+        }
+        if (IsKeyDown(KEY_W)) {
+            ycenter += center_step;
+        }
+        if (IsKeyDown(KEY_S)) {
+            ycenter -= center_step;
+        }
 
         invoke_kernel(kernel, command_queue, cl_mem_buff, pixels.data(), xcenter, ycenter, scale, res_w, res_h, 50);
     }
