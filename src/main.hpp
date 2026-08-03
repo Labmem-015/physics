@@ -1,12 +1,13 @@
 #pragma once
 
 #include <atomic>
-#include <exception>
 #include <cassert>
 #include <cmath>
 #include <cstdint>
+#include <exception>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <print>
 #include <sstream>
 #include <stop_token>
@@ -18,4 +19,5 @@
 
 #define CL_HPP_TARGET_OPENCL_VERSION 300 // Specifies target OpenCL version
 #include <CL/opencl.hpp>                 // Core OpenCL C header
+
 #include "utils.hpp"
