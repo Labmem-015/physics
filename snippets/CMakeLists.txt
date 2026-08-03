@@ -13,13 +13,13 @@ include_directories(./)
 add_executable(opencl_hello_world hello_world/main.cpp)
 target_precompile_headers(opencl_hello_world REUSE_FROM app)
 target_link_libraries(opencl_hello_world PRIVATE OpenCL::OpenCL) 
-copy_cl(hello_world.cl)
+copy_cl(hello_world/hello_world.cl)
 
 # Mandelbrot set
 add_executable(mandelbrot_set mandelbrot_set/main.cpp mandelbrot_set/render.cpp)
 target_precompile_headers(mandelbrot_set REUSE_FROM app)
 target_link_libraries(mandelbrot_set PRIVATE OpenCL::OpenCL raylib glfw)
-copy_cl(mandelbrot_set.cl)
+copy_cl(mandelbrot_set/mandelbrot_set.cl)
 
 # Check fp64 support
 add_executable(check_fp64_support check_fp64_support.cpp)
