@@ -20,3 +20,8 @@ add_executable(mandelbrot_set mandelbrot_set.cpp mandelbrot_set_render.cpp)
 target_precompile_headers(mandelbrot_set REUSE_FROM app)
 target_link_libraries(mandelbrot_set PRIVATE OpenCL::OpenCL raylib glfw)
 copy_cl(mandelbrot_set.cl)
+
+# Check fp64 support
+add_executable(check_fp64_support check_fp64_support.cpp)
+target_precompile_headers(check_fp64_support REUSE_FROM app)
+target_link_libraries(check_fp64_support PRIVATE OpenCL::OpenCL raylib glfw)
