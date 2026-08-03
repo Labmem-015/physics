@@ -10,6 +10,8 @@
 #include <cstdint>
 #include <atomic>
 #include <cmath>
+#include <stop_token>
+#include <thread>
 
 #include <raylib.h>
 
