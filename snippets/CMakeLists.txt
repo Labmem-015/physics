@@ -10,7 +10,7 @@ endfunction()
 include_directories(./)
 
 # Hello World printing
-add_executable(opencl_hello_world opencl_hello_world.cpp)
+add_executable(opencl_hello_world hello_world/main.cpp)
 target_precompile_headers(opencl_hello_world REUSE_FROM app)
 target_link_libraries(opencl_hello_world PRIVATE OpenCL::OpenCL) 
 copy_cl(hello_world.cl)
