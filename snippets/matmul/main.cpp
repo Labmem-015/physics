@@ -1,26 +1,28 @@
 decltype(auto) parse_args(int argc, const char *argv[]) {
-    std::vector mat_sizes{5, 5};
+    std::vector mat_sizes{5, 5, 5};
     constexpr std::string_view error_msg = "Arg {} is not a string!";
-    auto pos = 1;
-    if (argc > pos) {
-        if (ph::is_number(argv[pos])) {
-            mat_sizes.at(pos) = std::stoi(argv[pos]);
+    constexpr int max_arg_num = 3;
+    for (int pos = 1; pos <= max_arg_num; ++pos) {
+        if (argc > pos) {
+            if (ph::is_number(argv[pos])) {
+                mat_sizes.at(pos - 1) = std::stoi(argv[pos]);
+            } else {
+                throw std::runtime_error{std::format(error_msg, pos)};
+            }
         } else {
-            throw std::runtime_error{std::format(error_msg, pos)};
+            break;
         }
     }
-    pos = 2;
-    if (argc > pos) {
-        if (ph::is_number(argv[pos])) {
-            mat_sizes.at(pos) = std::stoi(argv[pos]);
-        } else {
-            throw std::runtime_error{std::format(error_msg, pos)};
-        }
+    if (argc - 1 > max_arg_num) {
+        std::println("Ignore other arguments except the first {} args", max_arg_num);
     }
-    pos = 3;
-    if (argc > pos) {
-        std::println("Ignore other arguments except the first two");
-    }
+
+	std::print("Sizes are: ");
+	for (const auto& s : mat_sizes) {
+		std::print("{} ", s);
+	}
+	std::println("");
+
     return mat_sizes;
 }
 
