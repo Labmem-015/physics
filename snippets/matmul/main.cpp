@@ -27,16 +27,14 @@ decltype(auto) parse_args(int argc, const char *argv[]) {
 }
 
 int main(int argc, const char *argv[]) {
+    auto *err = new cl_int{0};
+    cl::Context context(CL_DEVICE_TYPE_GPU);
+    auto dev_list = context.getInfo<CL_CONTEXT_DEVICES>(err);
+    if (*err != CL_SUCCESS || dev_list.empty()) {
+        std::println("No awailable GPU device");
+        return -1;
+    }
+    auto dev = dev_list.front();
     auto mat_sizes = parse_args(argc, argv);
-
-    auto* err = new cl_int{0};
-    auto platform = cl::Platform::get(err);
-    cl::Device dev;
-    dev.get();
-
-    auto platform_name = platform.getInfo<CL_PLATFORM_NAME>(err);
-    auto platform_vendor = platform.getInfo<CL_PLATFORM_VENDOR>(err);
-    auto device_max_cu = dev.getInfo<CL_DEVICE_MAX_COMPUTE_UNITS>(err);
-
     return 0;
 }
