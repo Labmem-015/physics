@@ -19,13 +19,15 @@ int main(int, char**) {
     // Fetch the supported extensions
     clGetDeviceInfo(device, CL_DEVICE_EXTENSIONS, ext_size, extensions, NULL);
 
+	int result = 0;
     // Check for the double precision string
     if (strstr(extensions, "cl_khr_fp64") != NULL) {
         printf("Double precision is supported!\n");
     } else {
         printf("Double precision is NOT supported.\n");
+		result = 1;
     }
 
     free(extensions);
-	return 0;
+	return result;
 }
