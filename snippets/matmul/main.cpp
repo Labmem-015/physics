@@ -8,16 +8,23 @@ decltype(auto) parse_args(int argc, const char *argv[]) {
     std::vector mat_sizes{5, 5, 5};
     constexpr std::string_view error_msg = "Unknown arg '{}' at pos {}!";
     constexpr int mat_max_args = 3;
+    bool are_sizes_sequential = true;
     for (int pos = 1; pos < argc; ++pos) {
         std::string_view arg = argv[pos];
-        if (pos <= mat_max_args && ph::is_number(arg)) {
+        if (pos <= mat_max_args && are_sizes_sequential && ph::is_number(arg)) {
             mat_sizes.at(pos - 1) = std::stoi(std::string(arg));
         } else if (arg == "-h" || arg == "--help") {
-            std::println("Awailable args: [dim1] [dim2] [dim3] [--cpu] [--gpu] [--help] [-h]");
+            std::println("Awailable args: ([dim1] [dim2] [dim3]) [--cpu] [--gpu] [--help] [-h]");
             std::exit(0);
         } else if (arg == "--cpu") {
+            if (pos <= mat_max_args) {
+                are_sizes_sequential = false;
+            }
             mode = Mode::CPU;
         } else if (arg == "--gpu") {
+            if (pos <= mat_max_args) {
+                are_sizes_sequential = false;
+            }
             mode = Mode::GPU;
         } else {
             throw std::runtime_error{std::format(error_msg, argv[pos], pos)};
@@ -43,7 +50,7 @@ cl::Device get_deivce(cl::Context &context) {
     auto *err = new cl_int{0};
     auto dev_list = context.getInfo<CL_CONTEXT_DEVICES>(err);
     if (*err != CL_SUCCESS || dev_list.empty()) {
-        throw std::runtime_error("No awailable GPU device");
+        throw std::runtime_error("No awailable compute device");
     }
     auto dev = dev_list.front();
     auto dev_name = dev.getInfo<CL_DEVICE_NAME>(err);
