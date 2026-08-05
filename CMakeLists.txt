@@ -18,12 +18,18 @@ find_package(raylib CONFIG REQUIRED)
 find_package(OpenCL CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 
+file(GLOB pch_files CONFIGURE_DEPENDS src/pch/*.[hc]pp)
+
+add_library(pch STATIC ${pch_files})
+target_precompile_headers(pch PUBLIC src/pch/pch.hpp)
+target_link_libraries(pch PUBLIC raylib glfw OpenCL::OpenCL)
+
 file(GLOB hpp_files CONFIGURE_DEPENDS src/*.hpp)
 file(GLOB cpp_files CONFIGURE_DEPENDS src/*.cpp)
 
 add_executable(app ${hpp_files} ${cpp_files})
-target_precompile_headers(app PUBLIC src/main.hpp)
-target_link_libraries(app PRIVATE raylib glfw OpenCL::OpenCL)
+target_precompile_headers(app REUSE_FROM pch)
+target_link_libraries(app PRIVATE pch)
 
 if(EXISTS "${PROJECT_SOURCE_DIR}/snippets/")
     add_subdirectory(snippets)
