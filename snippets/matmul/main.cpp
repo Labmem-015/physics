@@ -63,7 +63,7 @@ cl::Device get_deivce(cl::Context &context) {
     }
 
     std::println("Device name: {}", dev_name);
-    std::println("Device's vendor: {}", dev_vendor);
+    std::println("Device's vendor: {}\n\n", dev_vendor);
 
     return dev;
 }
@@ -83,6 +83,28 @@ void print(const std::vector<float> &mat, int rows, int cols) {
     }
 }
 
+void control_calc(const std::vector<float> &mat1, const std::vector<float> &mat2, std::vector<float> &result,
+                  const std::vector<int> &mat_sizes) {
+    namespace ch = std::chrono;
+    auto start = ch::steady_clock::now();
+    for (int row_a = 0; row_a < mat_sizes.at(0); ++row_a) {
+        for (int col_b = 0; col_b < mat_sizes.at(2); ++col_b) {
+            float sum = 0;
+            for (int el = 0; el < mat_sizes.at(1); ++el) {
+                sum += mat1[el + row_a * mat_sizes.at(0)] * mat2[col_b + el * mat_sizes.at(1)];
+            }
+            result[row_a * mat_sizes.at(0) + col_b] = sum;
+        }
+    }
+    auto end = ch::steady_clock::now();
+    std::println("Control on cpu calculation: {} ms", ch::duration_cast<ch::milliseconds>(end - start).count());
+}
+
+void gpu_calc(const std::vector<float> &mat1, const std::vector<float> &mat2, std::vector<float> result,
+              const std::vector<int> &mat_sizes, cl::Context &context, cl::Device &dev) {
+    std::println("Under construction");
+}
+
 int main(int argc, const char *argv[]) {
     try {
         auto mat_sizes = parse_args(argc, argv);
@@ -98,26 +120,17 @@ int main(int argc, const char *argv[]) {
         init(mat1);
         init(mat2);
 
-        std::println("\nVec1:");
-        print(mat1, mat_sizes.at(0), mat_sizes.at(1));
-        std::println("\nVec2:");
-        print(mat2, mat_sizes.at(1), mat_sizes.at(2));
-
-        for (int row_a = 0; row_a < mat_sizes.at(0); ++row_a) {
-            for (int col_b = 0; col_b < mat_sizes.at(2); ++col_b) {
-                float sum = 0;
-                for (int el = 0; el < mat_sizes.at(1); ++el) {
-                    auto index1 = el + row_a * mat_sizes.at(0);
-                    auto index2 = col_b + el * mat_sizes.at(1);
-                    sum += mat1[index1] * mat2[index2];
-                }
-                auto index = row_a * mat_sizes.at(0) + col_b;
-                result[index] = sum;
-            }
+        if (mat_sizes.at(0) * mat_sizes.at(1) * mat_sizes.at(2) < 1000) {
+            control_calc(mat1, mat2, result, mat_sizes);
+            std::println("\nVec1:");
+            print(mat1, mat_sizes.at(0), mat_sizes.at(1));
+            std::println("\nVec2:");
+            print(mat2, mat_sizes.at(1), mat_sizes.at(2));
+            std::println("\nProduct:");
+            print(result, mat_sizes.at(0), mat_sizes.at(2));
         }
 
-        std::println("\nProduct:");
-        print(result, mat_sizes.at(0), mat_sizes.at(2));
+        gpu_calc(mat1, mat2, result, mat_sizes, context, dev);
 
     } catch (const std::exception &e) {
         std::println("{}", e.what());
