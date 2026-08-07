@@ -47,4 +47,36 @@ bool is_number(std::string_view str) {
     return true;
 }
 
+cl::Program compile_kernel(const std::filesystem::path &path, cl::Context &context, cl::Device &dev) {
+    std::ifstream cl_file(path);
+    if (!cl_file.is_open()) {
+        throw std::runtime_error(std::format("Failed to open specified OpenCL kernel file: {}", path.string()));
+    }
+    std::stringstream buffer;
+    buffer << cl_file.rdbuf();
+    auto str_view = buffer.view();
+
+    cl::Program::Sources sources;
+    sources.push_back({str_view.data(), str_view.size()});
+    cl::Program program(context, sources);
+
+    program.build({dev});
+    cl_file.close();
+
+    auto binary = program.getInfo<CL_PROGRAM_BINARIES>().at(0);
+
+    if (!binary.empty()) {
+        auto out_name = path.stem() / ".cl_compiled";
+        std::ofstream out_file(out_name, std::ios::binary);
+        if (!cl_file.is_open()) {
+            std::println("Can't save compile OpenCL kernel code to the file. {}", out_name.string());
+        } else {
+            out_file.write(reinterpret_cast<const char *>(binary.data()), binary.size());
+            std::println("Successfully saved compiled OpenCL kernel code!");
+        }
+    }
+
+    return program;
+}
+
 } // namespace ph

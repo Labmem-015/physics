@@ -102,7 +102,7 @@ void control_calc(const std::vector<float> &mat1, const std::vector<float> &mat2
 
 void gpu_calc(const std::vector<float> &mat1, const std::vector<float> &mat2, std::vector<float> result,
               const std::vector<int> &mat_sizes, cl::Context &context, cl::Device &dev) {
-    std::println("Under construction");
+    auto program = ph::compile_kernel("matmul.cl", context, dev);
 }
 
 int main(int argc, const char *argv[]) {
